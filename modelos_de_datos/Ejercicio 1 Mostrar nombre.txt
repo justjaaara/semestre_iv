@@ -1,0 +1,24 @@
+Ejercicio 1
+Mostrar nombre de país, área del país y nombres de todas las ciudades,
+para los países "Colombia" y "Argentina"
+
+Sol: SELECT country.Name, country.SurfaceArea, city.Name from country, city where country.Name in ('Colombia', 'Argentina') and country.Code = city.CountryCode;
+
+COn JOIN: 
+MariaDB [world]> SELECT country.Name, country.SurfaceArea, city.Name from country inner join city on country.Code = city.CountryCode where country.Name in ('Colombia', 'Argentina');
+
+Ejercicio 2
+Mostrar nombre del país y nombre de todos los idiomas no oficiales que se
+hablan, para todos los países de la región de norte américa
+
+SOl:
+
+SELECT country.Name, countrylanguage.Language from country, countrylanguage where countrylanguage.IsOfficial = 'F' and country.Continent = 'North America' and country.Code
+= countrylanguage.CountryCode;
+
+CON JOIN:
+SELECT country.Name, countrylanguage.Language from country inner join countrylanguage on country.Code = countrylanguage.countrycode where countrylanguage.IsOfficial = 'F' and country.Continent = 'North America';
+
+
+
+

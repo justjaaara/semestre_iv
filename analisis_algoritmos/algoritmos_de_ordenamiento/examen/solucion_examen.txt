@@ -1,0 +1,165 @@
+'''
+###Punto 1: Ordenando productos en una tienda en línea
+Tu empresa administra una tienda en línea que ofrece una amplia variedad de productos. Cada vez que un usuario realiza una búsqueda o consulta una categoría de productos, estos se deben mostrar ordenados por precio de menor a mayor. Actualmente, la tienda tiene miles de productos en su catálogo, y estos se actualizan frecuentemente con nuevos productos y cambios de precios. El objetivo es que los productos siempre estén ordenados para mejorar la experiencia del usuario y la eficiencia de las búsquedas. Sin embargo, dado el tamaño del catálogo y la frecuencia de actualizaciones, se requiere que el proceso de ordenación sea eficiente tanto en tiempo como en recursos.
+
+Lista de precios de productos: [200, 150, 300, 50, 100, 250, 400]
+
+Pregunta: ¿Qué algoritmo de ordenamiento usarías para organizar los precios de los productos cada vez que se realice una consulta? Justifica tu elección considerando la eficiencia del algoritmo y el tamaño de los datos. Luego, implementa el código del algoritmo.
+'''
+
+def merge(arr, left, middle, right):
+    # Tamaño de las sublistas
+    n1 = middle - left + 1
+    n2 = right - middle
+
+    # Crear listas temporales
+    L = arr[left:middle + 1]
+    R = arr[middle + 1:right + 1]
+
+    # Índices iniciales de las sublistas y de la lista principal
+    i = j = 0
+    k = left
+
+    # Combinar las sublistas en orden ascendente
+    while i < n1 and j < n2:
+        if L[i] <= R[j]:
+            arr[k] = L[i]
+            i += 1
+        else:
+            arr[k] = R[j]
+            j += 1
+        k += 1
+
+    # Copiar los elementos restantes de L[] si quedan
+    while i < n1:
+        arr[k] = L[i]
+        i += 1
+        k += 1
+
+    # Copiar los elementos restantes de R[] si quedan
+    while j < n2:
+        arr[k] = R[j]
+        j += 1
+        k += 1
+
+def mergesort(arr, left, right):
+    if left < right:
+        # Encontrar el punto medio de la lista
+        middle = (left + right) // 2
+
+        # Ordenar la primera y la segunda mitad
+        mergesort(arr, left, middle)
+        mergesort(arr, middle + 1, right)
+
+        # Combinar las dos mitades ordenadas
+        merge(arr, left, middle, right)
+
+# Ejemplo de uso
+arr = [200, 150, 300, 50, 100, 250, 400]
+mergesort(arr, 0, len(arr) - 1)
+print("Punto1: Array ordenado utilizando merge sort:", arr)
+
+'''
+Considero que esta es la mejor opción que se puede utilizar para darle solución a este algoritmo ya que al usar el algoritmo de ordenamiento merge sort, se garantiza que los productos siempre estarán ordenados de menor a mayor precio. Además, el tiempo de ejecución de este algoritmo es O(n log n) en cualquier caso, lo que nos da una seguridad en su uso de que sin importar el tamaño de su entrada vamos a tener siempre un tiempo de ejecución de O(n log n), lo que lo hace eficiente para grandes cantidades de datos. Por otro lado, el merge sort es un algoritmo estable, lo cual significa que conserva el orden relativo de los elementos con el mismo valor, esto siendo importante para la muestra de los productos  que tengan el mismo precio se mantengan en el mismo orden en que se ingresaron.
+'''
+
+'''
+###Punto 2: Clasificación de estudiantes por calificaciones
+Eres responsable de administrar el sistema de calificaciones de una institución educativa. Se necesita una solución eficiente para clasificar las calificaciones de los estudiantes, las cuales van de 0 a 100. Estas calificaciones son utilizadas por el sistema para generar rankings y estadísticas. El número de estudiantes es considerable, alcanzando alrededor de 1000, y el sistema debe actualizarse regularmente. Además, como las calificaciones son siempre enteros y están en un rango fijo, podrías aprovechar esta característica para optimizar el proceso de ordenamiento.
+
+Lista de calificaciones de los estudiantes: [55, 70, 90, 100, 80, 75, 85, 95]
+
+Pregunta: ¿Qué algoritmo de ordenamiento utilizarías para clasificar las calificaciones de los estudiantes? Justifica tu elección, explicando cómo el rango limitado de valores influye en la elección del algoritmo. Luego, implementa el código del algoritmo.
+'''
+
+def counting_sort(arr):
+    # Encuentra el valor máximo en el arreglo
+    max_val = max(arr)
+    min_val = min(arr)
+
+    # Rango de los números en el arreglo
+    rango = max_val - min_val + 1
+
+    # Inicializa el arreglo de conteo
+    conteo = [0] * rango
+
+    # Cuenta la ocurrencia de cada elemento
+    for num in arr:
+        conteo[num - min_val] += 1
+
+    # Modifica el arreglo de conteo para almacenar posiciones acumuladas
+    for i in range(1, rango):
+        conteo[i] += conteo[i - 1]
+
+    # Crea el arreglo de salida
+    salida = [0] * len(arr)
+
+    # Coloca los elementos en la posición correcta (recorrido inverso para estabilidad)
+    for num in reversed(arr):
+        salida[conteo[num - min_val] - 1] = num
+        conteo[num - min_val] -= 1
+
+    # Copia los elementos ordenados al arreglo original
+    for i in range(len(arr)):
+        arr[i] = salida[i]
+
+# Ejemplo de uso:
+arr = [55, 70, 90, 100, 80, 75, 85, 95]
+counting_sort(arr)
+print("Punto2: Arreglo ordenado utilizando Counting Sort:", arr)
+
+'''
+Considero que la solucón más apropiada para esta situación es utilizando el counting sort, esto se debe a que ya que tenemos un rango conocido de valores, en este caso de 0 a 100, por otro lado solo hacemos uso de números enteros lo que nos permite hacer uso de este algoritmo de ordenamiento, ya que el counting sort es un algoritmo de ordenamiento estable y con una complejidad de tiempo de O(n + k), donde n es el número de elementos en la lista y k es el rango de los elementos. En este caso, el rango de las notas siempre es de 0 a 100, lo que nos da una complejidad de tiempo de O(n + 100), lo que se simplifica a O(n) porque sabemos que siempre vamos a tener el rango de datos entre 0 a 100, lo que nos garantiza que el tiempo de ejecución de este algoritmo es lineal, lo que lo convierte en la forma más eficiente para el ordenamiento de las notas de los estudiantes permitiendo que a medida que crece la cantidad de estudiantes que al momento son alrededor de 1000 y que hace que la dependiendo de la cantidad de estudiantes es básicamente el tiempo en ejecución que este tendrá, además de esto como se mencionó al inicio, es un algoritmo estable por lo que preserva el orden de los elementos de las notas de los estudiantes lo cual es útil para su posterior uso en diferentes estadísticas como nos meciona la situación presentada.
+'''
+
+'''
+###Punto 3: Organizando registros de inventario en una cadena de supermercados
+Trabajas para una cadena de supermercados que tiene tiendas en varias ubicaciones. Cada tienda gestiona un inventario de productos que incluye información como nombre, cantidad en stock y código de barras. Para optimizar la logística y mejorar la gestión de los inventarios, se te ha pedido que organices los productos por código de barras, que son números grandes. Sin embargo, dado que la cadena gestiona cientos de tiendas y cada una tiene miles de productos, el sistema de inventario tiene limitaciones de memoria. Por lo tanto, es necesario usar un algoritmo que no solo sea eficiente en tiempo, sino también en el uso de espacio adicional. El inventario puede actualizarse con frecuencia, por lo que también debe ser capaz de manejar datos dinámicos.
+
+Lista de códigos de barras de productos: [83929, 28391, 10239, 56320, 72839, 19203, 90213]
+
+Pregunta: ¿Qué algoritmo de ordenamiento usarías para organizar los productos por su código de barras? Justifica tu elección considerando las limitaciones de espacio y la eficiencia. Luego, implementa el código del algoritmo.
+'''
+
+import random
+
+def quicksort(arr, low, high):
+    if low < high:
+        # Encuentra el índice de partición usando un pivote aleatorio
+        pi = particion(arr, low, high)
+
+        # Ordena recursivamente los subarreglos
+        quicksort(arr, low, pi - 1)  # Subarreglo izquierdo
+        quicksort(arr, pi + 1, high) # Subarreglo derecho
+
+def particion(arr, low, high):
+    # Selecciona un pivote aleatorio y lo coloco al final
+    pivot_index = random.randint(low, high)
+    arr[pivot_index], arr[high] = arr[high], arr[pivot_index]
+    
+    # Tomamos el último elemento como pivote
+    pivote = arr[high]
+    i = low - 1  # Índice del elemento más pequeño
+
+    for j in range(low, high):
+        # Si el elemento actual es menor o igual al pivote
+        if arr[j] <= pivote:
+            i += 1
+            # Intercambiamos los elementos
+            arr[i], arr[j] = arr[j], arr[i]
+
+    # Colocamos el pivote en la posición correcta
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+
+# Ejemplo de uso:
+arr = [83929, 28391, 10239, 56320, 72839, 19203, 90213]
+n = len(arr)
+quicksort(arr, 0, n - 1)
+print("Punto3: Arreglo ordenado utilizando QuickSort:", arr)
+
+'''
+Escogí este algoritmo de ordenamiento ya que el quicksort es un algoritmo de ordenamiento eficiente en términos de tiempo y espacio, ya que tiene una complejidad de tiempo promedio de O(n log n) y en el peor caso de O(n^2), pero realicé una modificación haciendo que el pivot sea escogido de manera aleatoria además asignando este pivote en la última posición así minimizando la probabilidad de que se presente el peor caso.
+
+Además, el quicksort es un algoritmo in place, lo que significa que no requiere memoria adicional para almacenar los datos, lo que lo hace ideal para situaciones en las que se tienen limitaciones de memoria. Por otro lado es un algoritmo de ordenamiento no estable, lo que significa que no preserva el orden relativo de los elementos con el mismo valor, pero en este caso no es un problema ya que estamos ordenando los productos por su código de barras, lo que son números únicos para cada uno de los productos.
+'''
